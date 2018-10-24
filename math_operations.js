@@ -22,6 +22,48 @@ function add (query, response) {
   response.end(JSON.stringify({result:suma}))
 }
 
+function multiply(query, response) {
+  let mult = 1
+  for (let propName in query) {
+    let splitted = query[propName]
+    if(isNumeric(splitted)) {
+      let number = Number(splitted)
+      mult = mult*number
+      console.log(mult);
+      
+    } else {
+      response.writeHead(400, {'Content-Type': 'application/json'})
+      response.end(JSON.stringify({result:'error, el input debe ser numerico'}))
+    }
+  }
+  response.writeHead(200, {'Content-Type': 'application/json'})
+  response.end(JSON.stringify({result:mult}))
+}
+
+function fib(query, response) {
+  let num
+  for (let propName in query) {
+    num = query[propName]
+    break
+  } 
+  if(!isNumeric(num)) {
+    response.writeHead(400, {'Content-Type': 'application/json'})
+    response.end(JSON.stringify({result:'error, el input debe ser numerico'}))
+    return
+  }
+  response.writeHead(200, {'Content-Type': 'application/json'})
+  response.end(JSON.stringify({result:fibonacci(Number(num))}))
+}
+
+function fibonacci(number) {
+  if(number === 0)
+    return 0
+  else if(number === 1)
+    return 1
+  else
+    return fibonacci(number-1) + fibonacci(number-2)
+}
+
 /**
  ** isNumeric returns true if input is a number. This can be done using the oppsite behaviour from isNaN function
  **/
@@ -31,4 +73,8 @@ function isNumeric(num) {
 }
 
 //In this line we export the functions to be used in other javascript files. We must import this module with 'require' signature
-module.exports.add = add
+module.exports = {
+  add : add,
+  multiply: multiply,
+  fib : fib
+}
